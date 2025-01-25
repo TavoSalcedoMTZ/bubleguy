@@ -2,52 +2,60 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;      
-    public float rotationSpeed = 180f; 
+    public float moveSpeed = 5f;
+    public float rotationSpeed = 180f;
     private Rigidbody2D rb;
     private Vector2 movement;
+    private Animator playerAnimator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        // Movimiento exclusivo con WASD
-        float moveX = Input.GetAxisRaw("Horizontal"); 
-        float moveY = Input.GetAxisRaw("Vertical");   
+        // Tomar los valores de entrada para el movimiento
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
+
+        // Normalizar el vector de movimiento para evitar que el jugador se mueva más rápido en diagonal
         movement = new Vector2(moveX, moveY).normalized;
 
-
+        // Llamar a las animaciones de dirección con base en las teclas presionadas
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            Rotate(180); 
+           
+
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            Rotate(0); 
+
+            
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            Rotate(270);
+            
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            Rotate(90);
+            
+
         }
+
+        // Actualizar los parámetros del Animator para las animaciones
+        playerAnimator.SetFloat("Horizontal", moveX);
+        playerAnimator.SetFloat("Vertical", moveY);
+        playerAnimator.SetFloat("Speel", movement.sqrMagnitude);
     }
 
     void FixedUpdate()
     {
-       
+        // Mover el personaje de acuerdo al vector de movimiento
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
 
-    private void Rotate(float targetAngle)
-    {
-       
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, targetAngle));
-    }
 }
+
