@@ -496,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Jabon: 15
+  playerTransf: {fileID: 981050139}
 --- !u!1 &1607869341
 GameObject:
   m_ObjectHideFlags: 0
