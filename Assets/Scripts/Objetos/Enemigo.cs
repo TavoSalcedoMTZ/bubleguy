@@ -4,10 +4,30 @@ using UnityEngine;
 
 public class Enemigo : MonoBehaviour
 {
-    public int Vida=10;
+    public int Vida = 10;
+    private EnemyManager enemyManager;
     void Start()
     {
-        
+        // Obtener el EnemyManager desde la escena
+        enemyManager = FindObjectOfType<EnemyManager>();
+
+        if (enemyManager != null)
+        {
+            // Registrar el enemigo en el EnemyManager
+            enemyManager.RegisterEnemy(this);
+        }
+    }
+
+    public void Defeat()
+    {
+        // Notificar al EnemyManager que este enemigo ha sido derrotado
+        if (enemyManager != null)
+        {
+            enemyManager.EnemyDefeated();
+        }
+
+        // Aquí puedes poner cualquier lógica para destruir el enemigo
+        Destroy(gameObject);
     }
 
     void Update()
@@ -16,11 +36,12 @@ public class Enemigo : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
     }
 
     public void DicreseVida()
     {
-        Vida=Vida-1;
+        Vida = Vida - 1;
     }
+
 }
