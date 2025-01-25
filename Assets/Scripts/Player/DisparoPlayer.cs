@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class DisparoPlayer : MonoBehaviour
 {
-    public GameObject proyectilPrefab;  
+    public GameObject proyectilPrefab;
+    public GameObject proyectilExplosivoPrefab;
     public float disparoSpeed = 10f;   
-    public float tiempoVida = 2f;       
+    public float tiempoVida = 3f;       
     public Transform puntoDisparo;
     private JabonManage jabonmanage;
     public int UsoDeJabon;
@@ -44,7 +45,11 @@ public class DisparoPlayer : MonoBehaviour
             {
                 Personaje2Shoot();
             }
-           
+            else if (playernum == 2)
+            {
+                Personaje3Shoot();
+            }
+
         }
     }
 
@@ -135,6 +140,11 @@ public class DisparoPlayer : MonoBehaviour
                 rb5.velocity = puntoDisparo.right * disparoSpeed;
 
             }
+            Destroy(proyectil, tiempoVida);
+            Destroy(proyectil2, tiempoVida);
+            Destroy(proyectil3, tiempoVida);
+            Destroy(proyectil4, tiempoVida);
+            Destroy(proyectil5, tiempoVida);
         }
     }
 
@@ -147,34 +157,19 @@ public class DisparoPlayer : MonoBehaviour
         }
         else if (typeshot)
         {
+            jabonmanage.JabonDicrese(3);
+            GameObject proyectil = Instantiate(proyectilExplosivoPrefab, puntoDisparo.position, puntoDisparo.rotation);
 
-            jabonmanage.JabonDicrese(5);
-
-
-            GameObject proyectil = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
-            GameObject proyectil2 = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
-            GameObject proyectil3 = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
-            GameObject proyectil4 = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
-            GameObject proyectil5 = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
 
             Rigidbody2D rb = proyectil.GetComponent<Rigidbody2D>();
-            Rigidbody2D rb2 = proyectil2.GetComponent<Rigidbody2D>();
-            Rigidbody2D rb3 = proyectil3.GetComponent<Rigidbody2D>();
-            Rigidbody2D rb4 = proyectil4.GetComponent<Rigidbody2D>();
-            Rigidbody2D rb5 = proyectil5.GetComponent<Rigidbody2D>();
-
-
-
-            if (rb != null && rb2 != null && rb3 != null)
+            if (rb != null)
             {
-
                 rb.velocity = puntoDisparo.right * disparoSpeed;
-                rb2.velocity = puntoDisparo.right * disparoSpeed;
-                rb3.velocity = puntoDisparo.right * disparoSpeed;
-                rb4.velocity = puntoDisparo.right * disparoSpeed;
-                rb5.velocity = puntoDisparo.right * disparoSpeed;
-
             }
+
+
+            Destroy(proyectil, tiempoVida);
+
         }
     }
 
