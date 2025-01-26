@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using System.Collections;
-
 public class Menu : MonoBehaviour
 {
     public string seleccion;  // Escena seleccionada por defecto
@@ -11,37 +10,37 @@ public class Menu : MonoBehaviour
     private bool isPaused = false;  // Estado de pausa
     public Slider slider1, slider2, slider3;  // Sliders
     public VideoPlayer videoPlayer;  // Reproductor de video
-    public GameObject transitionPanel;  // Panel de transición
-    public GameObject currentScenePanel;  // Panel de la escena actual
+    public GameObject transitionPanel;  // Panel de transición (con el video)
+    public GameObject currentScenePanel;  // Panel de la escena actual (Menú)
     public GameObject whitePanel;  // Panel blanco
 
     public void Play(string sceneName)
     {
         SaveSliderValues();
-        currentScenePanel.SetActive(false);
-        StartCoroutine(LoadSceneWhileTransition(sceneName));
+        StartCoroutine(LoadSceneWhileTransition(sceneName));  // Iniciar la transición sin desactivar el menú
     }
 
     public void menu(string sceneName)
     {
-        currentScenePanel.SetActive(false);
-        StartCoroutine(LoadSceneWhileTransition(sceneName));
+        StartCoroutine(LoadSceneWhileTransition(sceneName));  // Iniciar la transición sin desactivar el menú
     }
 
     private IEnumerator LoadSceneWhileTransition(string sceneName)
     {
+        // Inicia la carga asíncrona de la nueva escena
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
-        // Activamos el panel de transición para mostrar el video de transición
-        transitionPanel.SetActive(true);
-        videoPlayer.Play();
+        // Muestra el panel de transición (con el video)
+        transitionPanel.SetActive(true);  // Asegúrate de que el panel de transición sea visible
+        videoPlayer.Play();  // Reproduce el video de transición
 
         // Mientras se carga la nueva escena, mostramos la animación de transición
         while (!asyncLoad.isDone)
         {
             if (asyncLoad.progress >= 0.9f)
             {
+                // Aquí verificamos si el video ha llegado al final
                 if (videoPlayer.frame >= (long)videoPlayer.frameCount - 1)
                 {
                     asyncLoad.allowSceneActivation = true;
@@ -50,10 +49,11 @@ public class Menu : MonoBehaviour
             yield return null;
         }
 
-        // Activamos el panel blanco después de cambiar de escena
+        // Al terminar de cargar la escena, mostramos el panel blanco
+        // Mueve el activado del whitePanel aquí, solo después de que el video termine
         whitePanel.SetActive(true);
 
-        // Esperamos un pequeño tiempo para asegurarnos de que la escena se haya activado
+        // Esperamos un breve momento para asegurarnos que la escena se activó
         yield return new WaitForSecondsRealtime(0.1f);
 
         // Reproducimos la animación de transición sobre el panel blanco
@@ -62,6 +62,7 @@ public class Menu : MonoBehaviour
 
     private IEnumerator PlayTransitionAnimation()
     {
+        // Reproducimos el video de transición
         videoPlayer.Play();
 
         // Esperamos a que el video termine de reproducirse
@@ -72,7 +73,7 @@ public class Menu : MonoBehaviour
 
         // Esperamos un pequeño tiempo adicional antes de desactivar el panel blanco
         yield return new WaitForSecondsRealtime(0.5f);
-        whitePanel.SetActive(false);
+        whitePanel.SetActive(false);  // Desactivamos el panel blanco después de la transición
     }
 
     public void Retry()
